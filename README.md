@@ -1,36 +1,37 @@
 # RADAR TEŞKILAT — HAMDANE OPERATION
 
-A responsive, browser-local command-center demo built with plain HTML, CSS, and JavaScript. No build step or external runtime dependencies are required.
+A responsive local command-center demo built with HTML, CSS, and vanilla JavaScript. No build system or external runtime dependencies are required.
 
 ## Run locally
 
-- Open `index.html` in a current desktop or mobile browser for the radar simulator, device inventory, logs, settings, and other local demo features.
-- To use camera streams, serve the files from **HTTPS** or `localhost` (camera APIs are normally unavailable from an insecure network origin). For example, with Python installed:
+Open `index.html` for the local radar simulation, manually managed device inventory, logs, and preferences. Camera APIs require a secure context: HTTPS, or `localhost` during development. For example:
 
-  ```sh
-  python3 -m http.server 8000
-  ```
+```sh
+python3 -m http.server 8000
+```
 
-  Then visit `http://localhost:8000` and select **Camera wall → Start camera**. The browser asks for permission. Each stream is stopped when its Stop button is used; closing the page also stops active tracks.
+Then open `http://localhost:8000`, choose **Camera wall**, and press **Start camera**. The browser will ask for camera permission after that operator action; each stream can be stopped individually. Android Chrome needs a secure HTTPS deployment and camera permission for the site.
 
-## Included features
+## Features
 
-- Dashboard with live clock, local system status, activity feed, and counters.
-- Animated 360-degree radar with selectable, explicitly synthetic `DEMO DATA` targets, zoom, range, pause/resume, and full-screen controls.
-- Four operator-started camera panels using `getUserMedia({ video: true, audio: false })`. Permission denials, missing hardware, unsupported contexts, and stream errors are shown in the UI.
-- In-browser visual frame-difference motion detection for active streams, with sensitivity adjustment, local timestamped event history, and notifications.
-- Manually maintained authorized-device inventory with add/edit/delete, search, status filter, and local persistence. It does not scan for nearby devices or networks.
-- Searchable/filterable local activity logs and CSV download.
-- Admin preferences, operator display profile, and local console lock/unlock.
+- Dashboard and local status/activity counters.
+- Animated radar with clearly labelled synthetic DEMO DATA, selectable targets, zoom, range, pause/resume, and full-screen.
+- Four explicitly operator-started browser camera streams, per-camera motion detection switches, sensitivity setting, permission/error messages, and visual frame-difference events.
+- Add/edit/delete/search/filter manually registered authorized devices. No nearby device or network discovery.
+- Filterable/searchable operation log and CSV export.
+- Local theme/operator/settings, notifications, and a UI lock (not authentication).
+- Responsive desktop/mobile layout and Netlify deployment configuration.
 
-## Data and privacy
+## Storage and privacy
 
-The app stores settings, manual device records, notifications, and logs in `localStorage` on the current browser profile. Clearing browser site data removes them. Camera frames are compared in memory in the page for visual motion detection; no frame upload is implemented. No camera starts without an operator click and browser permission. The radar contacts are simulated and are not real tracking data.
+Settings, devices, notifications, logs, and motion events are stored in the browser's `localStorage` and are not synchronized across browsers/devices. Camera video is displayed in the page; motion sampling uses a small in-memory canvas and no upload is implemented. No camera starts in the background. Radar contacts are simulated and are not real tracking data.
+
+This demo has no backend, user authentication, or access control. The local console lock is only a UI affordance. Do not use it to protect sensitive or operational data.
+
+## Netlify deployment
+
+Deploy the repository root as a static site. `netlify.toml` sets the publish directory to `.` and applies basic security/privacy headers, including camera-only Permissions Policy. No build command is needed. The site must be served over HTTPS for camera access (Netlify provides HTTPS after deployment).
 
 ## Optional backend
 
-This version intentionally runs without a backend and contains no credentials. Supabase is not configured or required. If adding a backend later, use a public anon/publishable key only in the browser, enforce Row Level Security on every exposed table, and keep service-role or other privileged secrets on a trusted server. Add authentication only alongside server-side/database policies that enforce the authenticated user's access.
-
-## Deploy
-
-The site is static and can be deployed from the repository root to GitHub Pages, Netlify, or another static host. Ensure the deployment is HTTPS for camera access. No build command or publish directory beyond the repository root is needed.
+Supabase is not configured and no credentials are included. If adding a backend, use only a public anon/publishable browser key, enable Row Level Security on exposed tables, and keep service-role secrets on a trusted server. Authentication must be backed by database/server access policies.
